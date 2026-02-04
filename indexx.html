@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Interactive Web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0b1020;
+      --accent: #6c5ce7;
+      --accent-soft: rgba(108, 92, 231, 0.2);
+      --text: #eaeaea;
+      --muted: #a0a0b8;
+      --card: #101426;
+      --border: #1f2440;
+      --danger: #ff7675;
+      --success: #00b894;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1b1f3b 0, #050816 45%, #02010a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAVBAR */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(5, 8, 22, 0.96), rgba(5, 8, 22, 0.7), transparent);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-orb {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: conic-gradient(from 180deg, #6c5ce7, #00cec9, #fd79a8, #ffeaa7, #6c5ce7);
+      box-shadow: 0 0 20px rgba(108, 92, 231, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-orb::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.8), transparent 55%);
+      mix-blend-mode: screen;
+    }
+
+    .logo-text {
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--muted);
+      background: rgba(15, 22, 46, 0.95);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.4rem;
+      font-size: 0.85rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 0.1rem;
+      cursor: pointer;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.2rem;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #6c5ce7, #00cec9);
+      transition: width 0.2s ease-out;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .btn-ghost {
+      font-size: 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(8, 12, 32, 0.9);
+      padding: 0.45rem 0.8rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      font-size: 0.8rem;
+      border-radius: 999px;
+      border: 0;
+      padding: 0.5rem 0.95rem;
+      background: radial-gradient(circle at 0 0, #ffeaa7 0, #fd79a8 30%, #6c5ce7 70%, #00cec9 100%);
+      color: #050816;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 15px 35px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.4), transparent 50%);
+      opacity: 0;
+      transition: opacity 0.2s ease-out;
+    }
+
+    .btn-primary:hover::after {
+      opacity: 1;
+    }
+
+    /* LAYOUT */
+    main {
+      flex: 1;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1rem 1.2rem 2.5rem;
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+      gap: 2.5rem;
+      align-items: center;
+      padding: 1.6rem 0 2.8rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(5, 8, 22, 0.96);
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: conic-gradient(#00b894, #00cec9, #6c5ce7, #00b894);
+      box-shadow: 0 0 10px rgba(0, 184, 148, 0.9);
+    }
+
+    .hero-title {
+      font-size: clamp(2.3rem, 3vw + 1rem, 3rem);
+      line-height: 1.05;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-title span {
+      background: linear-gradient(to right, #ffeaa7, #fd79a8, #6c5ce7, #00cec9);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      color: var(--muted);
+      max-width: 32rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.3rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+    }
+
+    .hero-footnote {
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.9rem;
+    }
+
+    .hero-footnote-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(108, 92, 231, 0.8);
+    }
+
+    /* HERO RIGHT PANEL */
+    .hero-panel {
+      position: relative;
+      padding: 0.9rem;
+      border-radius: 1.5rem;
+      background: radial-gradient(circle at 0 0, rgba(225, 225, 255, 0.12), transparent 55%);
+      overflow: hidden;
+    }
+
+    .hero-panel-inner {
+      position: relative;
+      border-radius: 1.2rem;
+      background: radial-gradient(circle at top, #151a33 0, #050816 55%, #02010a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1rem;
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.01);
+      overflow: hidden;
+    }
+
+    .matrix {
+      position: absolute;
+      inset: 0;
+      opacity: 0.24;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.12) 0, transparent 50%),
+        linear-gradient(transparent 0, transparent calc(100% - 130px), rgba(108, 92, 231, 0.5) 100%);
+      mix-blend-mode: screen;
+    }
+
+    .glow-orbit {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 999px;
+      border: 1px dashed rgba(108, 92, 231, 0.35);
+      top: -30px;
+      right: -80px;
+      filter: blur(0.2px);
+    }
+
+    .glow-orbit::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8), transparent 60%);
+      opacity: 0.6;
+    }
+
+    .hero-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.9rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-panel-tabs {
+      display: inline-flex;
+      background: rgba(7, 10, 25, 0.95);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.12rem;
+      gap: 0.1rem;
+    }
+
+    .hero-tab {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .hero-tab.active {
+      background: radial-gradient(circle at 0 0, #ffeaa7, #fd79a8, #6c5ce7);
+      color: #050816;
+      font-weight: 600;
+    }
+
+    .hero-panel-status {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .status-pill {
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(5, 8, 22, 0.9);
+    }
+
+    .hero-panel-body {
+      position: relative;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.02), transparent 55%), rgba(5, 8, 22, 0.9);
+      padding: 0.85rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 0.7rem;
+    }
+
+    .hero-console {
+      background: #050816;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.7rem;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.7rem;
+      color: #dfe6ff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-console-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-console-lights {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .hero-console-lights span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #ff7675;
+    }
+
+    .hero-console-lights span:nth-child(2) {
+      background: #fdcb6e;
+    }
+
+    .hero-console-lights span:nth-child(3) {
+      background: #00b894;
+    }
+
+    .hero-console-title {
+      color: var(--muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-console-body {
+      max-height: 190px;
+      overflow: auto;
+      padding-right: 0.2rem;
+    }
+
+    .hero-console-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .hero-console-body::-webkit-scrollbar-thumb {
+      background: rgba(108, 92, 231, 0.6);
+      border-radius: 999px;
+    }
+
+    .code-line {
+      margin-bottom: 0.08rem;
+      white-space: nowrap;
+    }
+
+    .code-prompt {
+      color: #636e72;
+    }
+
+    .code-keyword {
+      color: #81ecec;
+    }
+
+    .code-func {
+      color: #74b9ff;
+    }
+
+    .code-string {
+      color: #fd79a8;
+    }
+
+    .code-accent {
+      color: #ffeaa7;
+    }
+
+    .hero-console-cursor {
+      display: inline-block;
+      width: 6px;
+      height: 1em;
+      background: #dfe6ff;
+      animation: blink 1s steps(2, start) infinite;
+      margin-left: 2px;
+      transform: translateY(2px);
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    .hero-panel-side {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.4rem;
+    }
+
+    .metric {
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: linear-gradient(145deg, rgba(13, 18, 48, 0.98), rgba(6, 10, 30, 0.98));
+      padding: 0.55rem;
+      font-size: 0.72rem;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      margin-bottom: 0.18rem;
+    }
+
+    .metric-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .metric-value.success {
+      color: var(--success);
+    }
+
+    .metric-value.danger {
+      color: var(--danger);
+    }
+
+    .activity-feed {
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: linear-gradient(145deg, rgba(13, 18, 48, 0.98), rgba(6, 10, 30, 0.98));
+      padding: 0.55rem;
+      font-size: 0.72rem;
+    }
+
+    .activity-title {
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .activity-tag {
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: rgba(12, 19, 52, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .activity-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+    }
+
+    .activity-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .activity-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #00b894;
+      box-shadow: 0 0 10px rgba(0, 184, 148, 0.8);
+      margin-right: 0.22rem;
+    }
+
+    /* INTERACTIVE WIDGETS SECTION */
+    .widgets {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr);
+      gap: 1.4rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .card {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(145deg, rgba(11, 15, 40, 0.98), rgba(6, 10, 30, 0.98));
+      padding: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(108, 92, 231, 0.16), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.68rem;
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      color: var(--muted);
+      background: rgba(5, 8, 22, 0.95);
+    }
+
+    .card-body {
+      position: relative;
+      z-index: 2;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* TASK LIST WIDGET */
+    .task-input-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .task-input-row input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(4, 7, 22, 0.95);
+      padding: 0.35rem 0.85rem;
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .task-input-row input::placeholder {
+      color: rgba(160, 160, 184, 0.8);
+    }
+
+    .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 0;
+      background: linear-gradient(135deg, #6c5ce7, #00cec9);
+      color: #050816;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .task-list {
+      list-style: none;
+      max-height: 170px;
+      overflow: auto;
+      padding-right: 0.1rem;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.25rem 0.2rem;
+      border-radius: 0.5rem;
+      transition: background 0.15s ease-out;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .task-checkbox {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      cursor: pointer;
+    }
+
+    .task-title {
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .task-title.done {
+      text-decoration: line-through;
+      color: rgba(160, 160, 184, 0.8);
+    }
+
+    .task-meta {
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .task-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.28rem;
+      margin-left: 0.4rem;
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(3, 5, 18, 0.95);
+      color: var(--muted);
+      padding: 0.15rem 0.32rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .task-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* MINI ANALYTICS WIDGET */
+    .chip-row {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.6rem;
+    }
+
+    .chip {
+      font-size: 0.68rem;
+      padding: 0.16rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      color: var(--muted);
+    }
+
+    .chart-line {
+      height: 64px;
+      border-radius: 0.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(to top, rgba(108, 92, 231, 0.18), transparent 55%),
+        repeating-linear-gradient(to right, rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 10px),
+        radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.08), transparent 50%);
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 0.45rem;
+    }
+
+    .chart-pulse {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent 0, rgba(255, 255, 255, 0.18) 40%, transparent 85%);
+      mix-blend-mode: screen;
+      animation: slidePulse 3.2s linear infinite;
+    }
+
+    @keyframes slidePulse {
+      0% { transform: translateX(-80%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .chart-metrics {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .chart-metric-main {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .chart-tag {
+      font-size: 0.65rem;
+      padding: 0.14rem 0.46rem;
+      border-radius: 999px;
+      border: 1px solid rgba(46, 213, 115, 0.5);
+      color: #55efc4;
+      background: rgba(5, 15, 20, 0.95);
+    }
+
+    /* LIVE PROMPT WIDGET */
+    .prompt-feed {
+      max-height: 208px;
+      overflow: auto;
+      padding-right: 0.15rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .prompt-item {
+      border-radius: 0.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(4, 7, 22, 0.96);
+      padding: 0.4rem 0.45rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.16rem;
+    }
+
+    .prompt-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(160, 160, 184, 0.9);
+    }
+
+    .prompt-output {
+      color: var(--text);
+      font-size: 0.76rem;
+    }
+
+    .prompt-input-row {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .prompt-input-row input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(4, 7, 22, 0.95);
+      padding: 0.35rem 0.85rem;
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .prompt-input-row input::placeholder {
+      color: rgba(160, 160, 184, 0.8);
+    }
+
+    /* FAQ / ACCORDION */
+    .faq {
+      margin-bottom: 2.4rem;
+    }
+
+    .faq-list {
+      margin-top: 0.8rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(145deg, rgba(11, 15, 40, 0.98), rgba(6, 10, 30, 0.98));
+      overflow: hidden;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .faq-item:last-child {
+      border-bottom: 0;
+    }
+
+    .faq-question {
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .faq-title {
+      font-size: 0.8rem;
+    }
+
+    .faq-toggle {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .faq-answer {
+      padding: 0 0.7rem 0.55rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: none;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: #050816;
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.7rem 1.2rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-panel {
+        order: -1;
+      }
+
+      .widgets {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-panel-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero {
+        padding-top: 1.1rem;
+      }
+
+      .shell {
+        padding-inline: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="logo">
+        <div class="logo-orb"></div>
+        <div>
+          <div class="logo-text">Instant Studio</div>
+          <div class="pill">Self‑hosted console</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#widgets">Widgets</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="nav-cta">
+        <button class="btn-ghost" id="modeToggleBtn">Dark mode</button>
+        <button class="btn-primary" id="primaryCta"><span>Launch preset</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="shell">
+      <!-- HERO -->
+      <section class="hero">
+        <div>
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            <span>Live playground</span>
+          </div>
+          <h1 class="hero-title">
+            Spin up your own <span>interactive dashboard</span> with one file.
+          </h1>
+          <p class="hero-subtitle">
+            Paste this page into any free static host and you instantly get a fast, interactive web app: task board,
+            live prompt box, faux analytics, and more — no build tools, no backend.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary" id="scrollToWidgets"><span>Use the widgets</span></button>
+            <button class="btn-ghost" id="heroQuickStart">How to deploy (GitHub Pages)</button>
+          </div>
+          <div class="hero-footnote">
+            <span class="hero-footnote-dot"></span>
+            <span>State is stored in your browser only. Refresh to wipe the sandbox.</span>
+          </div>
+        </div>
+
+        <aside class="hero-panel" aria-label="Demo console">
+          <div class="hero-panel-inner">
+            <div class="matrix"></div>
+            <div class="glow-orbit"></div>
+            <div class="hero-panel-header">
+              <div class="hero-panel-tabs" id="heroTabs">
+                <button class="hero-tab active" data-tab="console">Console</button>
+                <button class="hero-tab" data-tab="snapshot">Snapshot</button>
+              </div>
+              <div class="hero-panel-status">
+                <span class="status-pill" id="statusPill">Idle</span>
+                <span>Latency &lt; 40ms</span>
+              </div>
+            </div>
+
+            <div class="hero-panel-body">
+              <div class="hero-console" id="heroConsole">
+                <div class="hero-console-header">
+                  <div class="hero-console-lights">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="hero-console-title">/session/bootstrap</div>
+                </div>
+                <div class="hero-console-body" id="consoleLines">
+                  <!-- lines injected by JS -->
+                </div>
+              </div>
+
+              <div class="hero-panel-side">
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">Session quality</div>
+                    <div class="metric-value success" id="metricQuality">99.4%</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">Actions executed</div>
+                    <div class="metric-value" id="metricActions">0</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">Tasks completed</div>
+                    <div class="metric-value" id="metricTasks">0</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">Errors</div>
+                    <div class="metric-value danger" id="metricErrors">0</div>
+                  </div>
+                </div>
+
+                <div class="activity-feed">
+                  <div class="activity-title">
+                    <span>Activity</span>
+                    <span class="activity-tag" id="activityTag">Awaiting input</span>
+                  </div>
+                  <div class="activity-items" id="activityItems">
+                    <!-- items injected by JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- WIDGETS -->
+      <section id="widgets" class="widgets">
+        <!-- Tasks widget -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="section-title">Inline task system</h2>
+              <p class="section-subtitle">
+                Drop your tasks here and use it like a super‑light project manager. State is kept while the tab stays open.
+              </p>
+            </div>
+            <div class="badge-row">
+              <span class="badge">No login</span>
+              <span class="badge">Keyboard‑friendly</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="task-input-row">
+              <input type="text" id="taskInput" placeholder="Type a task and press Enter…" />
+              <button class="btn-sm" id="addTaskBtn">Add</button>
+            </div>
+            <ul id="taskList" class="task-list"></ul>
+          </div>
+        </div>
+
+        <!-- Analytics + Prompt -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="section-title">Fake analytics + live prompt</h2>
+              <p class="section-subtitle">
+                Use this side as a live scratch pad. It reacts instantly and shows a summary of your last prompt.
+              </p>
+            </div>
+            <div class="badge-row">
+              <span class="badge">Client‑side only</span>
+              <span class="badge">Zero backend</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chip-row">
+              <span class="chip">Realtime mock data</span>
+              <span class="chip">No tracking</span>
+              <span class="chip">Best for demos</span>
+            </div>
+            <div class="chart-line">
+              <div class="chart-pulse"></div>
+            </div>
+            <div class="chart-metrics">
+              <div>
+                <div class="chart-metric-main" id="chartMetricMain">+128%</div>
+                <div>Sessions vs. yesterday</div>
+              </div>
+              <div>
+                <div class="chart-tag" id="chartTag">Stable</div>
+              </div>
+            </div>
+
+            <div style="height: 0.5rem;"></div>
+
+            <div class="prompt-feed" id="promptFeed"></div>
+
+            <div class="prompt-input-row">
+              <input id="promptInput" type="text" placeholder="Type any idea, question, or note…" />
+              <button class="btn-sm" id="promptSendBtn">Send</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="faq">
+        <h2 class="section-title">Instant questions</h2>
+        <p class="section-subtitle">
+          A few quick answers to what this page is and how to drop it into your own free host.
+        </p>
+        <div class="faq-list" id="faqList">
+          <div class="faq-item open">
+            <div class="faq-question">
+              <div class="faq-title">What can I use this page for?</div>
+              <div class="faq-toggle">–</div>
+            </div>
+            <div class="faq-answer">
+              Treat it like a tiny all‑in‑one dashboard: keep tasks, jot ideas, and show off an interactive console demo.
+              Rename text and labels to match your personal site, portfolio, or product.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <div class="faq-title">How do I host it for free with a live URL?</div>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-answer">
+              Create a public repository on GitHub, add this file as <code>index.html</code>, then enable GitHub Pages in
+              the repository settings. Within a minute you’ll get a live URL like
+              <code>https://yourname.github.io/repo</code>.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <div class="faq-title">Can I get a custom domain for free?</div>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-answer">
+              You always get a free subdomain from GitHub Pages or whichever host you pick. Fully custom domains
+              (<code>.com</code>, <code>.in</code>, etc.) generally require a paid domain, but you can point them at your free host.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <div class="faq-title">Is there any tracking or database behind this?</div>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-answer">
+              No. Everything runs entirely in your browser with plain HTML, CSS, and JavaScript. When you close or
+              refresh the tab, the temporary state vanishes.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT / CTA -->
+      <section id="contact">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="section-title">Ready to make it yours?</h2>
+              <p class="section-subtitle">
+                Switch text, colors, or components and you instantly have a lightweight landing page with interactive
+                toys baked in.
+              </p>
+            </div>
+            <div class="badge-row">
+              <span class="badge">One static file</span>
+              <span class="badge">Works everywhere</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <p style="margin-bottom: 0.6rem;">
+              Start by changing the logo text, hero title, and FAQ answers to match what you’re building. You can also
+              rip out any widget you don’t need and keep only the parts that fit your idea.
+            </p>
+            <ul style="font-size: 0.8rem; color: var(--muted); margin-left: 0.9rem; margin-bottom: 0.7rem;">
+              <li>Customize colors in the <code>:root</code> section at the top of the file.</li>
+              <li>Remove sections you don’t want to ship — the layout still works.</li>
+              <li>Drop the file into any static host to go live in seconds.</li>
+            </ul>
+            <button class="btn-primary" id="ctaScrollTop"><span>Back to the top</span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>Built as a single‑file interactive demo. No frameworks, no build pipeline.</span>
+      <div class="footer-links">
+        <a href="#widgets">Widgets</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll helpers
+    function scrollIntoViewById(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    document.getElementById("scrollToWidgets").addEventListener("click", () => {
+      scrollIntoViewById("widgets");
+      bumpActions();
+      addActivity("Jumped to widgets");
+    });
+
+    document.getElementById("ctaScrollTop").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      bumpActions();
+      addActivity("Returned to top");
+    });
+
+    document.getElementById("heroQuickStart").addEventListener("click", () => {
+      alert(
+        "Quick deploy (GitHub Pages):\\n\\n1. Create a GitHub account (if needed).\\n2. New repo -> public.\\n3. Add this file as index.html.\\n4. Settings -> Pages -> choose main branch -> Save.\\n5. Wait 30–60s, then open the URL it shows you."
+      );
+      bumpActions();
+      addActivity("Viewed quick deploy");
+    });
+
+    document.getElementById("primaryCta").addEventListener("click", () => {
+      bumpActions();
+      addActivity("Launched demo preset");
+      flashStatus("Running", 800);
+      animateConsoleOnce();
+    });
+
+    // Hero tabs (only two simple states)
+    document.getElementById("heroTabs").addEventListener("click", (e) => {
+      const tab = e.target.closest(".hero-tab");
+      if (!tab) return;
+      const all = document.querySelectorAll(".hero-tab");
+      all.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      const mode = tab.dataset.tab;
+      if (mode === "snapshot") {
+        document.getElementById("statusPill").textContent = "Snapshot";
+        addActivity("Switched to snapshot mode");
+      } else {
+        document.getElementById("statusPill").textContent = "Idle";
+        addActivity("Switched to console mode");
+      }
+      bumpActions();
+    });
+
+    // Console animation
+    const consoleLinesEl = document.getElementById("consoleLines");
+    const baseConsoleLines = [
+      { type: "sys", text: "boot › initializing interactive shell…" },
+      { type: "sys", text: "boot › binding local widgets [tasks, prompt, analytics]" },
+      { type: "sys", text: "boot › no external APIs, no network calls" },
+      { type: "user", text: "user › make a tiny dashboard but keep it fun" },
+      { type: "ai", text: "ai   › one static file, multiple live panels — done." }
+    ];
+
+    function renderConsole(lines, withCursor) {
+      consoleLinesEl.innerHTML = "";
+      lines.forEach((line) => {
+        const div = document.createElement("div");
+        div.className = "code-line";
+        if (line.type === "sys") {
+          div.innerHTML =
+            '<span class="code-keyword">system</span><span class="code-prompt">:</span> <span class="code-string">' +
+            line.text +
+            "</span>";
+        } else if (line.type === "user") {
+          div.innerHTML =
+            '<span class="code-keyword">user</span><span class="code-prompt">:</span> <span class="code-accent">' +
+            line.text +
+            "</span>";
+        } else {
+          div.innerHTML =
+            '<span class="code-keyword">assistant</span><span class="code-prompt">:</span> <span class="code-string">' +
+            line.text +
+            "</span>";
+        }
+        consoleLinesEl.appendChild(div);
+      });
+      if (withCursor) {
+        const cursorLine = document.createElement("div");
+        cursorLine.className = "code-line";
+        cursorLine.innerHTML = '<span class="code-prompt">$</span><span class="hero-console-cursor"></span>';
+        consoleLinesEl.appendChild(cursorLine);
+      }
+      consoleLinesEl.scrollTop = consoleLinesEl.scrollHeight;
+    }
+
+    function animateConsoleOnce() {
+      const extended = [
+        ...baseConsoleLines,
+        { type: "user", text: "user › also track my clicks and prompts" },
+        { type: "ai", text: "ai   › wired metrics and activity panel to your actions." }
+      ];
+      renderConsole(extended, true);
+    }
+
+    renderConsole(baseConsoleLines, true);
+
+    // Metrics + activity
+    let metricActions = 0;
+    let metricTasks = 0;
+    let metricErrors = 0;
+
+    const metricActionsEl = document.getElementById("metricActions");
+    const metricTasksEl = document.getElementById("metricTasks");
+    const metricErrorsEl = document.getElementById("metricErrors");
+    const activityItemsEl = document.getElementById("activityItems");
+    const activityTagEl = document.getElementById("activityTag");
+
+    function bumpActions() {
+      metricActions++;
+      metricActionsEl.textContent = metricActions;
+      bumpQuality();
+    }
+
+    function bumpTasks(delta) {
+      metricTasks += delta;
+      if (metricTasks < 0) metricTasks = 0;
+      metricTasksEl.textContent = metricTasks;
+      bumpQuality();
+    }
+
+    function bumpErrors(delta) {
+      metricErrors += delta;
+      if (metricErrors < 0) metricErrors = 0;
+      metricErrorsEl.textContent = metricErrors;
+      bumpQuality(true);
+    }
+
+    const metricQualityEl = document.getElementById("metricQuality");
+    function bumpQuality(negative) {
+      let current = parseFloat(metricQualityEl.textContent.replace("%", "")) || 98;
+      if (negative) current -= 0.3;
+      else current += 0.1;
+      if (current > 99.9) current = 99.9;
+      if (current < 96) current = 96;
+      metricQualityEl.textContent = current.toFixed(1) + "%";
+    }
+
+    function addActivity(label) {
+      const item = document.createElement("div");
+      item.className = "activity-item";
+      const left = document.createElement("div");
+      left.style.display = "flex";
+      left.style.alignItems = "center";
+      const dot = document.createElement("span");
+      dot.className = "activity-dot";
+      const text = document.createElement("span");
+      text.textContent = label;
+      left.appendChild(dot);
+      left.appendChild(text);
+      const ts = document.createElement("span");
+      ts.style.fontSize = "0.68rem";
+      ts.style.color = "var(--muted)";
+      ts.textContent = "just now";
+      item.appendChild(left);
+      item.appendChild(ts);
+      activityItemsEl.prepend(item);
+      const count = activityItemsEl.children.length;
+      if (count > 5) {
+        activityItemsEl.removeChild(activityItemsEl.lastChild);
+      }
+      activityTagEl.textContent = label;
+    }
+
+    function flashStatus(text, ms) {
+      const pill = document.getElementById("statusPill");
+      const old = pill.textContent;
+      pill.textContent = text;
+      setTimeout(() => {
+        pill.textContent = old;
+      }, ms || 600);
+    }
+
+    // Task widget
+    const taskInput = document.getElementById("taskInput");
+    const addTaskBtn = document.getElementById("addTaskBtn");
+    const taskList = document.getElementById("taskList");
+
+    function createTaskElement(title) {
+      const li = document.createElement("li");
+      li.className = "task-item";
+
+      const left = document.createElement("div");
+      left.className = "task-left";
+
+      const checkbox = document.createElement("button");
+      checkbox.className = "task-checkbox";
+      checkbox.setAttribute("aria-label", "Toggle done");
+      checkbox.textContent = "";
+
+      const titleSpan = document.createElement("span");
+      titleSpan.className = "task-title";
+      titleSpan.textContent = title;
+
+      const meta = document.createElement("span");
+      meta.className = "task-meta";
+      meta.textContent = "added just now";
+
+      left.appendChild(checkbox);
+      left.appendChild(titleSpan);
+      left.appendChild(meta);
+
+      const actions = document.createElement("div");
+      actions.className = "task-actions";
+
+      const up = document.createElement("button");
+      up.className = "btn-icon";
+      up.textContent = "↑";
+
+      const down = document.createElement("button");
+      down.className = "btn-icon";
+      down.textContent = "↓";
+
+      const del = document.createElement("button");
+      del.className = "btn-icon";
+      del.textContent = "✕";
+
+      actions.appendChild(up);
+      actions.appendChild(down);
+      actions.appendChild(del);
+
+      li.appendChild(left);
+      li.appendChild(actions);
+
+      checkbox.addEventListener("click", () => {
+        const done = titleSpan.classList.toggle("done");
+        checkbox.textContent = done ? "✓" : "";
+        meta.textContent = done ? "marked done" : "back in progress";
+        bumpActions();
+        addActivity(done ? 'Completed task: "' + title + '"' : 'Reopened task: "' + title + '"');
+      });
+
+      del.addEventListener("click", () => {
+        taskList.removeChild(li);
+        bumpActions();
+        bumpTasks(-1);
+        addActivity('Removed task: "' + title + '"');
+      });
+
+      up.addEventListener("click", () => {
+        const prev = li.previousElementSibling;
+        if (prev) {
+          taskList.insertBefore(li, prev);
+          bumpActions();
+          addActivity('Moved task up: "' + title + '"');
+        }
+      });
+
+      down.addEventListener("click", () => {
+        const next = li.nextElementSibling;
+        if (next) {
+          taskList.insertBefore(next, li);
+          bumpActions();
+          addActivity('Moved task down: "' + title + '"');
+        }
+      });
+
+      return li;
+    }
+
+    function addTaskFromInput() {
+      const value = taskInput.value.trim();
+      if (!value) return;
+      const el = createTaskElement(value);
+      taskList.prepend(el);
+      taskInput.value = "";
+      bumpActions();
+      bumpTasks(1);
+      addActivity('Added task: "' + value + '"');
+    }
+
+    addTaskBtn.addEventListener("click", addTaskFromInput);
+    taskInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        addTaskFromInput();
+      }
+    });
+
+    // Prompt widget
+    const promptInput = document.getElementById("promptInput");
+    const promptSendBtn = document.getElementById("promptSendBtn");
+    const promptFeed = document.getElementById("promptFeed");
+    const chartMetricMain = document.getElementById("chartMetricMain");
+    const chartTag = document.getElementById("chartTag");
+
+    function summarizePrompt(text) {
+      const trimmed = text.trim();
+      if (!trimmed) return "Empty prompt. Try typing a short idea or question.";
+      if (trimmed.length < 40) {
+        return 'Quick note captured: "' + trimmed + '".';
+      }
+      const words = trimmed.split(/\s+/);
+      return "Captured " + words.length + " words and turned them into a one‑line summary in your head.";
+    }
+
+    function addPromptItem(raw, summary) {
+      const item = document.createElement("div");
+      item.className = "prompt-item";
+
+      const label = document.createElement("div");
+      label.className = "prompt-label";
+      label.textContent = "Prompt";
+
+      const rawDiv = document.createElement("div");
+      rawDiv.textContent = raw;
+
+      const outLabel = document.createElement("div");
+      outLabel.className = "prompt-label";
+      outLabel.textContent = "Summary";
+
+      const outDiv = document.createElement("div");
+      outDiv.className = "prompt-output";
+      outDiv.textContent = summary;
+
+      item.appendChild(label);
+      item.appendChild(rawDiv);
+      item.appendChild(outLabel);
+      item.appendChild(outDiv);
+      promptFeed.prepend(item);
+
+      const count = promptFeed.children.length;
+      if (count > 6) {
+        promptFeed.removeChild(promptFeed.lastChild);
+      }
+    }
+
+    function adjustChartOnPrompt(len) {
+      const base = 112;
+      const delta = Math.min(88, Math.floor(len / 4));
+      const value = base + delta;
+      chartMetricMain.textContent = "+" + value + "%";
+      if (value > 160) {
+        chartTag.textContent = "Spiking";
+      } else if (value > 135) {
+        chartTag.textContent = "Climbing";
+      } else {
+        chartTag.textContent = "Stable";
+      }
+    }
+
+    function sendPrompt() {
+      const value = promptInput.value.trim();
+      if (!value) return;
+      const summary = summarizePrompt(value);
+      addPromptItem(value, summary);
+      adjustChartOnPrompt(value.length);
+      promptInput.value = "";
+      bumpActions();
+      addActivity("Logged a new prompt");
+    }
+
+    promptSendBtn.addEventListener("click", sendPrompt);
+    promptInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        sendPrompt();
+      }
+    });
+
+    // FAQ toggles
+    const faqList = document.getElementById("faqList");
+    faqList.addEventListener("click", (e) => {
+      const question = e.target.closest(".faq-question");
+      if (!question) return;
+      const item = question.parentElement;
+      const isOpen = item.classList.contains("open");
+      const toggle = question.querySelector(".faq-toggle");
+      if (isOpen) {
+        item.classList.remove("open");
+        toggle.textContent = "+";
+      } else {
+        item.classList.add("open");
+        toggle.textContent = "–";
+      }
+      bumpActions();
+      addActivity("Toggled FAQ: " + question.querySelector(".faq-title").textContent);
+    });
+
+    // Dark / light mode toggle (simple inversion)
+    const modeToggleBtn = document.getElementById("modeToggleBtn");
+    let isLight = false;
+    modeToggleBtn.addEventListener("click", () => {
+      isLight = !isLight;
+      if (isLight) {
+        document.documentElement.style.setProperty("--bg", "#f7f7ff");
+        document.documentElement.style.setProperty("--bg-alt", "#e5e7ff");
+        document.documentElement.style.setProperty("--card", "#ffffff");
+        document.documentElement.style.setProperty("--text", "#111322");
+        document.documentElement.style.setProperty("--muted", "#4b4f68");
+        document.body.style.background =
+          "radial-gradient(circle at top, #ffffff 0, #dde1ff 50%, #cdd3ff 100%)";
+        modeToggleBtn.textContent = "Light mode";
+      } else {
+        document.documentElement.style.setProperty("--bg", "#050816");
+        document.documentElement.style.setProperty("--bg-alt", "#0b1020");
+        document.documentElement.style.setProperty("--card", "#101426");
+        document.documentElement.style.setProperty("--text", "#eaeaea");
+        document.documentElement.style.setProperty("--muted", "#a0a0b8");
+        document.body.style.background =
+          "radial-gradient(circle at top, #1b1f3b 0, #050816 45%, #02010a 100%)";
+        modeToggleBtn.textContent = "Dark mode";
+      }
+      bumpActions();
+      addActivity("Toggled color mode");
+    });
+  </script>
+</body>
+</html>
